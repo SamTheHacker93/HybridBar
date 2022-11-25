@@ -70,7 +70,7 @@ pub fn build_widgets(window: &ApplicationWindow) {
 }
 
 /// Gets the base key values.
-fn get_base_keys(root: &str) -> (String, String, u64, String, String) {
+fn get_base_keys(root: &str) -> (String, String, u64, String, String, String) {
     let text = config::try_get(root, "text", true, true)
         .string
         .unwrap_or_default();
@@ -90,7 +90,17 @@ fn get_base_keys(root: &str) -> (String, String, u64, String, String) {
     let tooltip_command = config::try_get(root, "tooltip_command", true, true)
         .string
         .unwrap_or_default();
-    (text, command, update_rate, tooltip, tooltip_command)
+    let text_command = config::try_get(root, "text_command", true, false)
+        .string
+        .unwrap_or_default();
+    (
+        text,
+        command,
+        update_rate,
+        tooltip,
+        tooltip_command,
+        text_command,
+    )
 }
 
 /// Creates all of the widgets.
@@ -128,6 +138,7 @@ fn create_components(left: &Box, centered: &Box, right: &Box) {
             tooltip_command: collected_base_keys.4,
             alignment: structures::Align::from_str(&f_widget_alignment)
                 .expect("[ERROR] Invalid widget alignment!\n"),
+            text_command: collected_base_keys.5,
         };
 
         // Gets every element after the widget identifier, then appends '_' in between.
@@ -178,6 +189,7 @@ fn add_widget(
     let tooltip = base_keys.tooltip;
     let tooltip_command = base_keys.tooltip_command;
     let alignment = base_keys.alignment;
+    let text_command = base_keys.text_command;
 
     // Extract left, centered and right.
     let left = left_centered_right.0;
@@ -207,6 +219,8 @@ fn add_widget(
                 tooltip_command,
                 command,
                 button: Button::with_label(&text),
+                update_rate,
+                text_command,
             };
 
             button.add(widget_name, alignment, left, centered, right)

@@ -23,6 +23,7 @@ pub struct BaseKeys {
     pub tooltip: String,
     pub tooltip_command: String,
     pub alignment: Align,
+    pub text_command: String,
 }
 
 /// Widget alignment.
